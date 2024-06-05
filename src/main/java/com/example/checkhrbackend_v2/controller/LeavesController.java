@@ -42,4 +42,9 @@ public class LeavesController {
     public List<Leaves> getLeavesByUserId(@PathVariable Long userId) {
         return leaveService.getLeavesByUserId(userId);
     }
+
+    @GetMapping("/user/{userId}/year/{year}")
+    public List<Leaves> getLeavesByUserIdAndYear(@PathVariable Long userId, @PathVariable int year) {
+        return leaveService.getLeavesByUserIdAndYear(userId, year);
+    }
 }

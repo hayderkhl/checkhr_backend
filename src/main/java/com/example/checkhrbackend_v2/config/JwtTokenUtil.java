@@ -18,7 +18,7 @@ public class JwtTokenUtil {
 
     public String generateToken(String username, Role role, Long userId) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + 1000*60*24);
+        Date expiryDate = new Date(now.getTime() + 1000*60*24*5);
 
         return Jwts.builder()
                 .setSubject(username)
