@@ -4,13 +4,20 @@ import com.example.checkhrbackend_v2.model.User;
 import com.example.checkhrbackend_v2.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.core.io.UrlResource;
+import org.springframework.core.io.Resource;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -64,20 +71,33 @@ public class UserController {
         return this.userService.updateUserRate(id,note);
     }
 
-    @GetMapping("/photo/{id}")
-    public ResponseEntity<byte[]> getEmployeePhoto(@PathVariable Long id) {
-        Optional<byte[]> photoOptional = Optional.ofNullable(userService.getEmployeePhotoUrl(id));
-
-        if (photoOptional.isPresent()) {
-            byte[] photo = photoOptional.get();
-            if (photo.length > 0) {
-                return ResponseEntity
-                        .ok()
-                        .contentType(MediaType.IMAGE_JPEG) // or MediaType.IMAGE_PNG based on actual image type
-                        .body(photo);
-            }
+    @GetMapping("/photo/{userId}")
+    public ResponseEntity<byte[]> getUserPhoto(@PathVariable("userId") Long userId) {
+        // Assuming you have a method to get the user's information by userId
+        Optional<User> user = userService.getUserById(userId);
+        if (user == null || user.get().getPhoto() == null) {
+            return ResponseEntity.notFound().build();
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        String filename = user.get().getPhoto(); // Assuming the filename is stored in the user object
+        Path filePath = Paths.get("D:/Hayder/checkhr_backend/utils/images").resolve(filename).normalize();
+
+        try {
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists() && resource.isReadable()) {
+                byte[] data = Files.readAllBytes(filePath);
+
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.IMAGE_PNG); // Set the content type as image/png or image/jpeg based on your file type
+
+                return ResponseEntity.ok().headers(headers).body(data);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
 }

@@ -49,7 +49,7 @@ public class User {
     private Integer rate;
 
     @Column(name = "photo")
-    private byte[] photo;
+    private String photo;
 
     @Column(name = "password_reset_token")
     private String passwordResetToken;

@@ -70,7 +70,7 @@ public class UserService {
 
     private static final Logger logger = Logger.getLogger(UserService.class.getName());
 
-    public byte[] getEmployeePhotoUrl(Long id) {
+    /* public byte[] getEmployeePhotoUrl(Long id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
             byte[] photo = user.get().getPhoto(); // Assuming `getPhoto()` returns the photo data as a byte array
@@ -85,7 +85,7 @@ public class UserService {
         }
         return null;
     }
-
+*/
     private byte[] fetchImageFromUrl(String photoUrl) throws IOException {
         URL url = new URL(photoUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();

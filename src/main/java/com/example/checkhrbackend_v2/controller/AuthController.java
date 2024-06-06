@@ -17,8 +17,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/auth")
@@ -30,6 +34,9 @@ public class AuthController {
 
     @Autowired
     private UserRepository userRepository;
+
+
+    private String uploadPath="D:/Hayder/checkhr_backend/utils/images";
 
     @PostMapping(value = "/addUser", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> addUser(
@@ -58,7 +65,18 @@ public class AuthController {
 
         if (photo != null && !photo.isEmpty()) {
             try {
-                user.setPhoto(photo.getBytes()); // Convert MultipartFile to byte[]
+                // Generate a unique filename to avoid overwriting
+                String filename = UUID.randomUUID().toString() + "_" + photo.getOriginalFilename();
+                Path filePath = Paths.get(uploadPath, filename);
+
+                // Create directories if they do not exist
+                Files.createDirectories(filePath.getParent());
+
+                // Save the file to the specified directory
+                Files.write(filePath, photo.getBytes());
+
+                // Set the filename in the user object (you can save the filename or the path)
+                user.setPhoto(filename); // Assuming user.setPhoto expects a String
             } catch (IOException e) {
                 e.printStackTrace();
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -70,6 +88,7 @@ public class AuthController {
         User registeredUser = authService.register(user);
         return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
     }
+
 
     @PostMapping("/login")
     public ResponseEntity<String> authenticateUser(@RequestBody AuthRequest authRequest) {
