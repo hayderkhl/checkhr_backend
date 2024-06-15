@@ -36,7 +36,7 @@ public class AuthController {
     private UserRepository userRepository;
 
 
-    private String uploadPath="D:/Hayder/checkhr_backend/utils/images";
+    private String uploadPath="C:Users/hayde/My-Github/checkHrBackend_V2/utils/images";
 
     @PostMapping(value = "/addUser", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> addUser(

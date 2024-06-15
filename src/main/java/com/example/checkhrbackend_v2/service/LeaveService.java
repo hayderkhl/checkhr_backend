@@ -73,11 +73,6 @@ public class LeaveService {
         return leaveRepository.findLeavesByUserIdAndYear(userId, year);
     }
 
-//    public String getUserFullNameById(Long userId) {
-//        String fullName = leaveRepository.findUserFullNameByUserId(userId);
-//        logger.info("Fetched full name for user ID {}: {}", userId, fullName);
-//        return fullName;
-//    }
 
     public String getUserFullNameById(Long userId) {
         List<String> fullNames = leaveRepository.findUserFullNamesByUserId(userId);

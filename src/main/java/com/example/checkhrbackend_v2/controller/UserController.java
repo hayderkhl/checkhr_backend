@@ -80,7 +80,7 @@ public class UserController {
         }
 
         String filename = user.get().getPhoto(); // Assuming the filename is stored in the user object
-        Path filePath = Paths.get("D:/Hayder/checkhr_backend/utils/images").resolve(filename).normalize();
+        Path filePath = Paths.get("C:Users/hayde/My-Github/checkHrBackend_V2/utils/images").resolve(filename).normalize();
 
         try {
             Resource resource = new UrlResource(filePath.toUri());
